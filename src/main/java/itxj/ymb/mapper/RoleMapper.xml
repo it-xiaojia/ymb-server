@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itxj.ymb.mapper.RoleMapper">
+	<resultMap id="roleMap" type="itxj.ymb.pojo.Role">
+		<id property="id" column="role_id"/>
+		<result property="name" column="val_name"/>
+		<collection property="authList"
+					column="role_id"
+					select="itxj.ymb.mapper.AuthMapper.findAuthList"/>
+	</resultMap>
+
+	<select id="findRoleById" resultMap="roleMap">
+		select
+		       *
+		from
+		     ymb_role
+		where
+		      role_id = #{roleId}
+	</select>
+	<select id="findRoleList" resultMap="roleMap">
+		select
+		       *
+		from
+		     ymb_role
+	</select>
+</mapper>

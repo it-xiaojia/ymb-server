@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <Properties>
+        <!-- 在当前目录下创建名为log目录做日志存放的目录 -->
+        <Property name="LOG_HOME" value="/projects/ymb/server/log"/>
+        <!-- 档案日志存放目录 -->
+        <Property name="LOG_ARCHIVE" value="/projects/ymb/server/log/archive"/>
+        <!-- 模块名称， 影响日志配置名，日志文件名，根据自己项目进行配置 -->
+        <Property name="LOG_MODULE_NAME" value="ymb"/>
+        <!-- 日志文件大小，超过这个大小将被压缩 -->
+        <Property name="LOG_MAX_SIZE" value="100 MB"/>
+        <!-- 保留多少天以内的日志 -->
+        <Property name="LOG_DAYS" value="15"/>
+        <!--输出日志的格式：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度， %msg：日志消息，%n是换行符 -->
+        <Property name="LOG_PATTERN"
+                  value="%d{yyyy-MM-dd hh:mm:ss.SSS} | %-5level | [%t] |%logger{50} | %L | : %msg%n"/>
+        <!--interval属性用来指定多久滚动一次-->
+        <Property name="TIME_BASED_INTERVAL" value="1"/>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!--输出日志的格式-->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingRandomAccessFile name="RollingRandomAccessFileAll"
+                                 fileName="${LOG_HOME}/${LOG_MODULE_NAME}-all.log"
+                                 filePattern="${LOG_ARCHIVE}/${LOG_MODULE_NAME}-infoLog-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，根据当前filePattern设置是1天滚动一次-->
+                <TimeBasedTriggeringPolicy interval="${TIME_BASED_INTERVAL}"/>
+                <SizeBasedTriggeringPolicy size="${LOG_MAX_SIZE}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认同一文件夹下最多保存7个文件-->
+            <DefaultRolloverStrategy max="${LOG_DAYS}"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 配置mybatis日志输出 -->
+        <logger name="blog.itxj.ymb.mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="RollingRandomAccessFileAll"/>
+            <AppenderRef ref="STDOUT"/>
+        </logger>
+        <!-- 配置自定义日志输出 -->
+        <logger name="ymb-debug" level="debug" additivity="false">
+            <AppenderRef ref="RollingRandomAccessFileAll"/>
+            <AppenderRef ref="STDOUT"/>
+        </logger>
+        <Root level="info">
+            <AppenderRef ref="RollingRandomAccessFileAll"/>
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</configuration>

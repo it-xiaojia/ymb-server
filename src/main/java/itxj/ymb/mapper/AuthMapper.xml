@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="itxj.ymb.mapper.AuthMapper">
+	<resultMap id="authMap" type="itxj.ymb.pojo.Auth">
+		<id property="id" column="auth_id"/>
+		<result property="name" column="val_name"/>
+		<result property="url" column="val_url"/>
+		<result property="parentAuthId" column="parent_auth_id"/>
+		<result property="iconClass" column="val_icon_class"/>
+		<result property="hasChild" column="val_has_child"/>
+	</resultMap>
+	<select id="findAuthList" resultMap="authMap">
+		select
+		       ya.auth_id,
+		       ya.val_name,
+		       ya.val_url,
+		       ya.parent_auth_id,
+		       ya.val_icon_class,
+		       ya.val_has_child
+		from
+			ymb_auth ya
+		<if test="roleId != null and roleId != 0">
+		inner join
+			ymb_role_auth yra
+		on
+			ya.auth_id = yra.auth_id
+			and yra.role_id = #{roleId}
+		</if>
+	</select>
+	<select id="findAuthById" resultMap="authMap">
+		select
+		       *
+		from
+		     ymb_auth
+		where
+		      auth_id = #{id}
+	</select>
+	<select id="findChildAuthByParentAuthId" resultType="itxj.ymb.pojo.Auth">
+		select
+		       *
+		from
+		     ymb_auth
+		where
+		      parent_auth_id = #{parentAuthId}
+	</select>
+	<insert id="addAuth">
+		<!-- 如果父权限ID为空，则添加根权限 -->
+		<if test="parentAuthId == null or parentAuthId == 0">
+			insert into
+				ymb_auth (
+				          val_name,
+				          val_url,
+				          val_icon_class
+				          )
+			values (
+			        #{name},
+			        #{url},
+			        #{iconClass}
+			)
+		</if>
+		<!-- 如果父权限ID不为空，则添加子权限 -->
+		<if test="parentAuthId != null and parentAuthId != 0">
+			insert into
+			    ymb_auth (
+			              val_name,
+			              val_url,
+			              val_icon_class,
+			              parent_auth_id
+			              )
+			values (
+			        #{name},
+			        #{url},
+			        #{iconClass},
+			        #{parentAuthId}
+			)
+		</if>
+	</insert>
+	<delete id="deleteAuth">
+		delete from
+		            ymb_auth
+		where
+		      auth_id = #{id}
+	</delete>
+	<update id="updateAuth">
+		update
+		    ymb_auth
+		<set>
+			<if test="name != null and name.length > 0">
+				val_name = #{name},
+			</if>
+			<if test="url != null and url.length > 0">
+				val_url = #{url},
+			</if>
+			<if test="parentAuthId != null">
+				parent_auth_id = #{parentAuthId},
+			</if>
+			<if test="iconClass != null and iconClass.length > 0">
+				val_icon_class = #{iconClass},
+			</if>
+			<if test="hasChild != null">
+				val_has_child = #{hasChild},
+			</if>
+		</set>
+		where
+		      auth_id = #{id}
+	</update>
+</mapper>

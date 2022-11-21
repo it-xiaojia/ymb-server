@@ -1,0 +1,12 @@
+ymb:
+  application:
+    author: IT小佳
+    name: 忆梦博客-服务端
+    version-number: 2.0
+server:
+  port: 52013
+  servlet:
+    context-path: /api
+spring:
+  profiles:
+    active: front

@@ -1,0 +1,24 @@
+ymb:
+  application:
+    version-tag: DEVELOP
+    server-ip: http://localhost
+    env-name: 开发-纯后端环境
+    allowed-origins:
+      - http://localhost:18888
+      - http://localhost:28888
+    permit-urls:
+      - role
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ymb?useUnicode=True&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: itxj91mysqlDB
+  redis:
+    database: 0
+    password: itxj91redisDB
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+logging:
+  config: classpath:log4j2-dev.xml

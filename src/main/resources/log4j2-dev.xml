@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <Properties>
+        <!--输出日志的格式：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度， %msg：日志消息，%n是换行符 -->
+        <Property name="LOG_PATTERN"
+                  value="%d{yyyy-MM-dd hh:mm:ss.SSS} | %-5level | [%t] |%logger{50} | %L | : %msg%n"/>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!--输出日志的格式-->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!-- 配置mybatis日志输出 -->
+        <logger name="blog.itxj.ymb.mapper" level="debug" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </logger>
+        <!-- 配置自定义日志输出 -->
+        <logger name="ymb-debug" level="debug" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </logger>
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</configuration>
