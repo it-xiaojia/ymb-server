@@ -2,15 +2,15 @@ package itxj.ymb.controller;
 
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.annotation.NoAuth;
-import itxj.ymb.dto.BeanQueryParam;
-import itxj.ymb.dto.user.AccessCredential;
-import itxj.ymb.dto.user.LoginParam;
-import itxj.ymb.dto.user.PasswordParam;
+import itxj.ymb.dto.DeleteParam;
+import itxj.ymb.dto.ObjectQueryParam;
+import itxj.ymb.dto.user.*;
 import itxj.ymb.service.UserService;
+import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.TokenVO;
 import itxj.ymb.vo.user.LoginCredential;
-import itxj.ymb.vo.user.UserInfoResult;
+import itxj.ymb.vo.user.UserVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户控制器
@@ -29,41 +30,75 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 	@Resource
 	private UserService userService;
+
 	@Resource
 	private HttpServletRequest request;
+
+	@PostMapping("queryObject")
+	@ApiLog
+	public ResponseEntity<UserVO> queryObject(@RequestBody @Validated ObjectQueryParam queryParam) {
+		TokenVO tokenVO = new TokenVO(request);
+		UserVO userInfoResult = userService.queryObject(queryParam, tokenVO);
+		return new Result<UserVO>().generateSuccessResponseEntity(userInfoResult);
+	}
+
+	@PostMapping("queryList")
+	@ApiLog
+	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated ListQueryParam queryParam) {
+		List<PageResult> userInfoResultList = userService.queryList(queryParam);
+		return new Result<List<PageResult>>().generateSuccessResponseEntity(userInfoResultList);
+	}
+
+	@PostMapping("add")
+	@ApiLog
+	public ResponseEntity<?> add(@RequestBody @Validated AddParam addParam) {
+		userService.add(addParam);
+		return new Result<>().generateSuccessResponseEntity();
+	}
+
+	@PostMapping("update")
+	@ApiLog
+	public ResponseEntity<?> update(@RequestBody @Validated UpdateParam updateParam) {
+		userService.update(updateParam);
+		return new Result<>().generateSuccessResponseEntity();
+	}
+
+	@PostMapping("delete")
+	@ApiLog
+	public ResponseEntity<?> delete(@RequestBody @Validated DeleteParam deleteParam) {
+		userService.delete(deleteParam);
+		return new Result<>().generateSuccessResponseEntity();
+	}
 
 	@PostMapping("login")
 	@ApiLog
 	@NoAuth
 	public ResponseEntity<LoginCredential> login(@RequestBody @Validated LoginParam loginParam) {
-		return new Result<LoginCredential>().generateSuccessResponseEntity("登录成功", userService.login(loginParam));
+		LoginCredential loginCredential = userService.login(loginParam);
+		return new Result<LoginCredential>().generateSuccessResponseEntity(loginCredential);
 	}
 
-	@PostMapping("getUserInfo")
+	@PostMapping("updatePassword")
 	@ApiLog
-	public ResponseEntity<UserInfoResult> getUserInfo(@RequestBody @Validated BeanQueryParam queryParam) {
-		return new Result<UserInfoResult>().generateSuccessResponseEntity("获取用户信息成功", userService.getUserInfo(queryParam, new TokenVO(request)));
-	}
-
-	@PostMapping("updateUserPassword")
-	@ApiLog
-	public ResponseEntity<?> updateUserPassword(@RequestBody @Validated PasswordParam passwordParam) {
-		userService.updateUserPassword(passwordParam, new TokenVO(request));
-		return new Result<>().generateSuccessResponseEntity("修改用户密码成功");
+	public ResponseEntity<?> updatePassword(@RequestBody @Validated PasswordParam passwordParam) {
+		TokenVO tokenVO = new TokenVO(request);
+		userService.updatePassword(passwordParam, tokenVO);
+		return new Result<>().generateSuccessResponseEntity();
 	}
 
 	@PostMapping("exitLogin")
 	@ApiLog
 	public ResponseEntity<?> exitLogin() {
-		userService.exitLogin(new TokenVO(request));
-		return new Result<>().generateSuccessResponseEntity("成功退出登录");
+		TokenVO tokenVO = new TokenVO(request);
+		userService.exitLogin(tokenVO);
+		return new Result<>().generateSuccessResponseEntity();
 	}
 
-	@PostMapping("resetUserDBStatus")
+	@PostMapping("resetDBStatus")
 	@ApiLog
 	@NoAuth
-	public ResponseEntity<?> resetUserDBStatus(@RequestBody @Validated AccessCredential credential) {
-		userService.resetUserDBStatus(credential);
-		return new Result<>().generateSuccessResponseEntity("成功重置数据库中的用户状态");
+	public ResponseEntity<?> resetDBStatus(@RequestBody @Validated AccessCredential credential) {
+		userService.resetDBStatus(credential);
+		return new Result<>().generateSuccessResponseEntity();
 	}
 }

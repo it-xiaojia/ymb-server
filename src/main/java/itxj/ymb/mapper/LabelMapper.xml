@@ -3,23 +3,5 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="itxj.ymb.mapper.LabelMapper">
-	<resultMap id="labelMap" type="itxj.ymb.pojo.Label">
-		<id property="id" column="label_id"/>
-		<result property="name" column="val_name"/>
-	</resultMap>
 
-	<select id="findLabelList" resultMap="labelMap">
-		select
-		       yl.label_id,
-		       yl.val_name
-		from
-		     ymb_label yl
-		<if test="articleId != null and articleId != 0">
-		inner join
-			 ymb_article_label yal
-		on
-			yl.label_id = yal.label_id
-		and yal.article_id = #{articleId}
-		</if>
-	</select>
 </mapper>

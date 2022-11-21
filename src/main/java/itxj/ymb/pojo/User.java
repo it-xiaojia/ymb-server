@@ -1,5 +1,9 @@
 package itxj.ymb.pojo;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.*;
 
 import java.io.Serializable;
@@ -13,33 +17,41 @@ import java.io.Serializable;
 @Setter
 @ToString
 @Builder
+@TableName("ymb_user")
 public class User implements Serializable {
 	/**
 	 * 用户ID
 	 */
+	@TableId(value = "user_id", type = IdType.AUTO)
 	private Integer id;
 	/**
 	 * 账号
 	 */
+	@TableField("val_account")
 	private String account;
 	/**
 	 * 密码
 	 */
+	@TableField("val_password")
 	private String password;
 	/**
 	 * 用户名
 	 */
+	@TableField("val_username")
 	private String username;
 	/**
-	 * 用户账号状态字典
+	 * 用户账号状态
 	 */
-	private Integer statusCode;
+	@TableField("account_status_code")
+	private Integer accountStatusCode;
 	/**
-	 * 用户角色
+	 * 用户角色ID
 	 */
-	private Role role;
+	@TableField("user_role_id")
+	private Integer userRoleId;
 	/**
 	 * 上次成功登录的时间
 	 */
+	@TableField("val_last_login_time")
 	private String lastLoginTime;
 }

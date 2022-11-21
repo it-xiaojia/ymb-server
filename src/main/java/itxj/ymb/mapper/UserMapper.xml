@@ -1,47 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="itxj.ymb.mapper.UserMapper">
-    <resultMap id="userMap" type="itxj.ymb.pojo.User">
-        <id property="id" column="user_id"/>
-        <result property="account" column="val_account"/>
-        <result property="password" column="val_password"/>
-        <result property="username" column="val_username"/>
-        <result property="lastLoginTime" column="val_last_login_time"/>
-        <result property="statusCode" column="account_status_code"/>
-        <association property="role"
-                     column="user_role_id"
-                     select="itxj.ymb.mapper.RoleMapper.findRoleById"/>
-    </resultMap>
-    <select id="findUserById" resultMap="userMap">
-        select
-               *
-        from
-             ymb_user
-        where
-              user_id = #{id}
-    </select>
-    <select id="findUserByObject" resultMap="userMap">
-        select
-            *
-        from
-            ymb_user
-        where
-            val_account = #{account}
-            and val_password = #{password}
-    </select>
-    <update id="updateUser">
-        update ymb_user
-        <set>
-            <if test="password != null and password != ''">
-                val_password = #{password},
-            </if>
-            <if test="statusCode != null and statusCode != ''">
-                account_status_code = #{statusCode},
-            </if>
-        </set>
-        where
-            user_id = #{id}
-    </update>
+
 </mapper>

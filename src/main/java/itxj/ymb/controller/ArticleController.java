@@ -1,17 +1,15 @@
 package itxj.ymb.controller;
 
 import itxj.ymb.annotation.ApiLog;
-import itxj.ymb.annotation.NoAuth;
-import itxj.ymb.dto.BeanQueryParam;
-import itxj.ymb.dto.article.DeleteParam;
+import itxj.ymb.dto.DeleteParam;
+import itxj.ymb.dto.ObjectQueryParam;
+import itxj.ymb.dto.article.AddParam;
 import itxj.ymb.dto.article.ListQueryParam;
 import itxj.ymb.dto.article.UpdateParam;
-import itxj.ymb.dto.article.WriteParam;
 import itxj.ymb.service.ArticleService;
 import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
-import itxj.ymb.vo.TokenVO;
-import itxj.ymb.vo.article.ArticleInfoResult;
+import itxj.ymb.vo.article.ArticleVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 文章控制器
@@ -30,41 +28,39 @@ import javax.servlet.http.HttpServletRequest;
 public class ArticleController {
     @Resource
     private ArticleService articleService;
-    @Resource
-    private HttpServletRequest request;
 
-    @PostMapping("getArticleList")
+    @PostMapping("queryObject")
     @ApiLog
-    @NoAuth
-    public ResponseEntity<PageResult> getArticleList(@RequestBody @Validated ListQueryParam queryParam) {
-        return new Result<PageResult>().generateSuccessResponseEntity("文章列表查询成功", articleService.getArticleList(queryParam));
+    public ResponseEntity<ArticleVO> queryObject(@RequestBody @Validated ObjectQueryParam queryParam) {
+        ArticleVO articleInfoResult = articleService.queryObject(queryParam);
+        return new Result<ArticleVO>().generateSuccessResponseEntity(articleInfoResult);
     }
 
-    @PostMapping("getArticle")
+    @PostMapping("queryList")
     @ApiLog
-    @NoAuth
-    public ResponseEntity<ArticleInfoResult> getArticleByArticleId(@RequestBody @Validated BeanQueryParam queryParam) {
-        return new Result<ArticleInfoResult>().generateSuccessResponseEntity("文章查询成功", articleService.getArticle(queryParam));
+    public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated ListQueryParam queryParam) {
+        List<PageResult> articleInfoResultList = articleService.queryList(queryParam);
+        return new Result<List<PageResult>>().generateSuccessResponseEntity(articleInfoResultList);
     }
 
-    @PostMapping("writeArticle")
+    @PostMapping("add")
     @ApiLog
-    public ResponseEntity<?> writeArticle(@RequestBody @Validated WriteParam writeParam) {
-        articleService.writeArticle(writeParam, new TokenVO(request));
-        return new Result<>().generateSuccessResponseEntity("成功写入一篇文章");
+    public ResponseEntity<?> add(@RequestBody @Validated AddParam addParam) {
+        articleService.add(addParam);
+        return new Result<>().generateSuccessResponseEntity();
     }
 
-    @PostMapping("updateArticle")
+    @PostMapping("update")
     @ApiLog
-    public ResponseEntity<?> updateArticle(@RequestBody @Validated UpdateParam updateParam) {
-        articleService.updateArticle(updateParam);
-        return new Result<>().generateSuccessResponseEntity("成功修改一篇文章");
+    public ResponseEntity<?> update(@RequestBody @Validated UpdateParam updateParam) {
+        articleService.update(updateParam);
+        return new Result<>().generateSuccessResponseEntity();
     }
 
-    @PostMapping("deleteArticle")
+    @PostMapping("delete")
     @ApiLog
-    public ResponseEntity<?> deleteArticle(@RequestBody @Validated DeleteParam deleteParam) {
-        articleService.deleteArticle(deleteParam);
-        return new Result<>().generateSuccessResponseEntity("成功删除一篇文章");
+    public ResponseEntity<?> delete(@RequestBody @Validated DeleteParam deleteParam) {
+        articleService.delete(deleteParam);
+        return new Result<>().generateSuccessResponseEntity();
     }
 }

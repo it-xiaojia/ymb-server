@@ -23,6 +23,6 @@ public class SystemController {
     @PostMapping("getLastInsertId")
     @ApiLog
     public ResponseEntity<LastInsertIdResult> getLastInsertId() {
-        return new Result<LastInsertIdResult>().generateSuccessResponseEntity("获取插入成功的数据ID成功", systemService.getLastInsertId());
+        return new Result<LastInsertIdResult>().generateSuccessResponseEntity(systemService.getLastInsertId());
     }
 }

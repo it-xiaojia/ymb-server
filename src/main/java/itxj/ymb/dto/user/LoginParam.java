@@ -1,6 +1,6 @@
 package itxj.ymb.dto.user;
 
-import itxj.ymb.util.DataUtil;
+import itxj.ymb.util.DataUtils;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -28,10 +28,10 @@ public class LoginParam implements Serializable {
     private String password;
 
     public void setAccount(String account) {
-        this.account = DataUtil.isStringNotNull(account) ? DataUtil.stringToMd5(account) : account;
+        this.account = DataUtils.isStringNotNull(account) ? DataUtils.stringToMd5(account) : account;
     }
 
     public void setPassword(String password) {
-        this.password = DataUtil.isStringNotNull(password) ? DataUtil.stringToMd5(password) : password;
+        this.password = DataUtils.isStringNotNull(password) ? DataUtils.stringToMd5(password) : password;
     }
 }

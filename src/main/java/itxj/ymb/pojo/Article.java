@@ -1,9 +1,12 @@
 package itxj.ymb.pojo;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 文章
@@ -14,50 +17,46 @@ import java.util.List;
 @Setter
 @ToString
 @Builder
+@TableName("ymb_article")
 public class Article implements Serializable {
     /**
      * 文章ID
      */
+    @TableId(value = "article_id", type = IdType.AUTO)
     private Integer id;
     /**
-     * 作者
+     * 作者ID
      */
-    private User author;
+    @TableField("user_id")
+    private Integer userId;
     /**
      * 标题
      */
+    @TableField("val_title")
     private String title;
     /**
      * 发布日期
      */
+    @TableField("val_publish_date")
     private String publishDate;
     /**
      * 更新日期
      */
+    @TableField("val_update_date")
     private String updateDate;
     /**
      * 文章内容
      */
+    @TableField("val_section")
     private String section;
     /**
-     * 文章所属分类
+     * 文章所属分类ID
      */
-    private Category category;
+    @TableField("category_id")
+    private Category categoryId;
     /**
-     * 文章标签列表
+     * 文章状态代码
      */
-    private List<Label> labelList;
-    /**
-     * 文章状态
-     */
-    private Integer statusCode;
-
-    public void setAuthor(User author) {
-        // 不对外暴露作者相关敏感信息
-        author.setRole(null);
-        author.setAccount(null);
-        author.setPassword(null);
-        author.setLastLoginTime(null);
-        this.author = author;
-    }
+    @TableField("article_status_code")
+    private Integer articleStatusCode;
 }

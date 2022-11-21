@@ -1,12 +1,12 @@
 package itxj.ymb.util;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
 import itxj.ymb.constant.CommonConstant;
 import itxj.ymb.mapper.UserMapper;
 import itxj.ymb.pojo.User;
 import itxj.ymb.vo.TokenVO;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * 封装一些常用到的数据工具类
  */
-public class DataUtil {
+public class DataUtils {
     private static final Logger LOGGER = LogManager.getLogger(CommonConstant.LOGGER_NAME);
     /**
      * token中携带数据的key值
@@ -38,7 +38,7 @@ public class DataUtil {
      */
     private static final long ACCESS_TOKEN_EXPIRE = 15;
 
-    private DataUtil() {
+    private DataUtils() {
     }
 
     /**
@@ -184,16 +184,16 @@ public class DataUtil {
     }
 
     /**
-     * 通过token从redis中生成用户信息
+     * 通过token查询用户信息
      *
      * @param userMapper   UserMapper
      * @param redisManager RedisManager
      * @param token        含有用户ID的token
      * @return 返回用户对象
      */
-    public static User getUserInfoByToken(UserMapper userMapper, RedisManager redisManager, String token) {
+    public static User queryUserInfoByToken(UserMapper userMapper, RedisManager redisManager, String token) {
         Integer userId = Integer.parseInt(redisManager.get(token).split(CommonConstant.PUBLIC_SPLIT)[0]);
-        return userMapper.findUserById(userId);
+        return userMapper.selectById(userId);
     }
 
     /**

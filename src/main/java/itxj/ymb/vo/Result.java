@@ -1,7 +1,7 @@
 package itxj.ymb.vo;
 
 import itxj.ymb.constant.APIConstant;
-import itxj.ymb.util.DataUtil;
+import itxj.ymb.util.DataUtils;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
@@ -53,26 +53,20 @@ public class Result<T> {
     /**
      * 生成不带有数据的成功响应体
      *
-     * @param successMessage 成功响应的自定义消息，如果为空，则使用默认消息
      * @return 返回ResponseEntity<?>
      */
-    public ResponseEntity<T> generateSuccessResponseEntity(String successMessage) {
-        return DataUtil.isStringNotNull(successMessage) ?
-                ResponseEntity.ok().body(generateResponseBody(APIConstant.SUCCESS.setMessage(successMessage), null)) :
-                ResponseEntity.ok().body(generateResponseBody(APIConstant.SUCCESS, null));
+    public ResponseEntity<T> generateSuccessResponseEntity() {
+        return ResponseEntity.ok().body(generateResponseBody(APIConstant.SUCCESS, null));
     }
 
     /**
      * 生成带有数据的成功响应体
      *
-     * @param successMessage 成功响应的自定义消息，如果为空，则使用默认消息
      * @param data           响应数据
      * @return 返回ResponseEntity<?>
      */
-    public ResponseEntity<T> generateSuccessResponseEntity(String successMessage, T data) {
-        return DataUtil.isStringNotNull(successMessage) ?
-                ResponseEntity.ok().body(generateResponseBody(APIConstant.SUCCESS.setMessage(successMessage), data)) :
-                ResponseEntity.ok().body(generateResponseBody(APIConstant.SUCCESS, data));
+    public ResponseEntity<T> generateSuccessResponseEntity(T data) {
+        return ResponseEntity.ok().body(generateResponseBody(APIConstant.SUCCESS, data));
     }
 
     /**
@@ -82,7 +76,7 @@ public class Result<T> {
      * @return 返回ResponseEntity<?>
      */
     public ResponseEntity<T> generateFailResponseEntity(String failMessage) {
-        return DataUtil.isStringNotNull(failMessage) ?
+        return DataUtils.isStringNotNull(failMessage) ?
                 ResponseEntity.ok().body(generateResponseBody(APIConstant.FAIL.setMessage(failMessage), null)) :
                 ResponseEntity.ok().body(generateResponseBody(APIConstant.FAIL, null));
     }
@@ -95,7 +89,7 @@ public class Result<T> {
      * @return 返回ResponseEntity<?>
      */
     public ResponseEntity<T> generateFailResponseEntity(String failMessage, T data) {
-        return DataUtil.isStringNotNull(failMessage) ?
+        return DataUtils.isStringNotNull(failMessage) ?
                 ResponseEntity.ok().body(generateResponseBody(APIConstant.FAIL.setMessage(failMessage), data)) :
                 ResponseEntity.ok().body(generateResponseBody(APIConstant.FAIL, data));
     }

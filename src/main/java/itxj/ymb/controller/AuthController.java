@@ -1,15 +1,15 @@
 package itxj.ymb.controller;
 
 import itxj.ymb.annotation.ApiLog;
-import itxj.ymb.dto.BeanQueryParam;
+import itxj.ymb.dto.DeleteParam;
+import itxj.ymb.dto.ObjectQueryParam;
 import itxj.ymb.dto.auth.AddParam;
-import itxj.ymb.dto.auth.DeleteParam;
 import itxj.ymb.dto.auth.ListQueryParam;
 import itxj.ymb.dto.auth.UpdateParam;
 import itxj.ymb.service.AuthService;
+import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
-import itxj.ymb.vo.auth.AuthInfoResult;
-import itxj.ymb.vo.user.AuthMenu;
+import itxj.ymb.vo.auth.AuthVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,36 +29,38 @@ public class AuthController {
 	@Resource
 	private AuthService authService;
 
-	@PostMapping("getAuthList")
+	@PostMapping("queryObject")
 	@ApiLog
-	public ResponseEntity<List<AuthMenu>> getAuthList(@RequestBody @Validated ListQueryParam queryParam) {
-		return new Result<List<AuthMenu>>().generateSuccessResponseEntity("权限列表查询成功", authService.getAuthList(queryParam));
+	public ResponseEntity<AuthVO> queryObject(@RequestBody @Validated ObjectQueryParam queryParam) {
+		AuthVO authInfoResult = authService.queryObject(queryParam);
+		return new Result<AuthVO>().generateSuccessResponseEntity(authInfoResult);
 	}
 
-	@PostMapping("getAuthById")
+	@PostMapping("queryList")
 	@ApiLog
-	public ResponseEntity<AuthInfoResult> getAuthById(@RequestBody @Validated BeanQueryParam queryParam) {
-		return new Result<AuthInfoResult>().generateSuccessResponseEntity("权限查询成功", authService.getAuthById(queryParam));
+	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated ListQueryParam queryParam) {
+		List<PageResult> authInfoResultList = authService.queryList(queryParam);
+		return new Result<List<PageResult>>().generateSuccessResponseEntity(authInfoResultList);
 	}
 
-	@PostMapping("addAuth")
+	@PostMapping("add")
 	@ApiLog
-	public ResponseEntity<?> addAuth(@RequestBody @Validated AddParam addParam) {
-		authService.addAuth(addParam);
-		return new Result<>().generateSuccessResponseEntity("成功新增一个权限");
+	public ResponseEntity<?> add(@RequestBody @Validated AddParam addParam) {
+		authService.add(addParam);
+		return new Result<>().generateSuccessResponseEntity();
 	}
 
-	@PostMapping("updateAuth")
+	@PostMapping("update")
 	@ApiLog
-	public ResponseEntity<?> updateAuth(@RequestBody @Validated UpdateParam updateParam) {
-		authService.updateAuth(updateParam);
-		return new Result<>().generateSuccessResponseEntity("成功更新一个权限");
+	public ResponseEntity<?> update(@RequestBody @Validated UpdateParam updateParam) {
+		authService.update(updateParam);
+		return new Result<>().generateSuccessResponseEntity();
 	}
 
-	@PostMapping("deleteAuth")
+	@PostMapping("delete")
 	@ApiLog
-	public ResponseEntity<?> deleteAuth(@RequestBody @Validated DeleteParam deleteParam) {
-		authService.deleteAuth(deleteParam);
-		return new Result<>().generateSuccessResponseEntity("成功删除一个权限");
+	public ResponseEntity<?> delete(@RequestBody @Validated DeleteParam deleteParam) {
+		authService.delete(deleteParam);
+		return new Result<>().generateSuccessResponseEntity();
 	}
 }

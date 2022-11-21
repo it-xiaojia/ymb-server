@@ -6,7 +6,7 @@ import itxj.ymb.constant.CommonConstant;
 import itxj.ymb.exception.AppException;
 import itxj.ymb.mapper.UserMapper;
 import itxj.ymb.pojo.User;
-import itxj.ymb.util.DataUtil;
+import itxj.ymb.util.DataUtils;
 import itxj.ymb.util.RedisManager;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.TokenVO;
@@ -79,7 +79,7 @@ public class AOPConfig {
 		Object[] args = joinpoint.getArgs();
 		LOGGER.debug("\n==> 拦截到请求："
 				+ "\n==> 请求者IP：" + ip + " "
-				+ "\n==> 请求时间：" + DataUtil.convertCurrentTimeToString()
+				+ "\n==> 请求时间：" + DataUtils.convertCurrentTimeToString()
 				+ "\n==> 请求接口：" + request.getRequestURL()
 				+ "\n==> 请求方法：" + request.getMethod()
 				+ "\n==> 参数内容：" + Arrays.toString(args));
@@ -167,21 +167,21 @@ public class AOPConfig {
 				} else {
 					// 校验未过期的refreshToken
 					// 取出refreshToken中存储的用户信息
-					User user = DataUtil.getUserInfoByToken(userMapper, redisManager, refreshToken);
+					User user = DataUtils.queryUserInfoByToken(userMapper, redisManager, refreshToken);
 					String account = user.getAccount();
 					String password = user.getPassword();
-					boolean isValidRefreshToken = DataUtil.verifyToken(password, refreshToken, account);
+					boolean isValidRefreshToken = DataUtils.verifyToken(password, refreshToken, account);
 					LOGGER.debug("===校验refreshToken");
 					if (isValidRefreshToken) {
 						// 删除旧的accessToken
 						LOGGER.debug("===清理旧的refreshToken");
-						DataUtil.deleteRedisTokenInfo(redisManager, refreshToken, null);
+						DataUtils.deleteRedisTokenInfo(redisManager, refreshToken, null);
 						LOGGER.debug("===正在重新生成双token");
 						// 如果没有过期则生成新的refreshToken和accessToken，返回给前端来重新调用
-						result = new Result<TokenVO>().generateResponseEntity(APIConstant.FORBIDDEN, DataUtil.generateTokenVO(redisManager,
+						result = new Result<TokenVO>().generateResponseEntity(APIConstant.FORBIDDEN, DataUtils.generateTokenVO(redisManager,
 								account,
 								password,
-								DataUtil.generateUserInfo(user)));
+								DataUtils.generateUserInfo(user)));
 					} else {
 						LOGGER.debug("===refreshToken校验不通过，权限校验失败");
 						result = ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -190,14 +190,14 @@ public class AOPConfig {
 			} else {
 				// 如果没有过期则校验accessToken
 				LOGGER.debug("===校验accessToken");
-				User user = DataUtil.getUserInfoByToken(userMapper, redisManager, accessToken);
-				boolean isValidAccessToken = DataUtil.verifyToken(null, accessToken, user.getAccount());
+				User user = DataUtils.queryUserInfoByToken(userMapper, redisManager, accessToken);
+				boolean isValidAccessToken = DataUtils.verifyToken(null, accessToken, user.getAccount());
 				if (isValidAccessToken) {
 					LOGGER.debug("===accessToken校验通过，接口放行");
 					result = (ResponseEntity<?>) proceedingJoinPoint.proceed();
 				} else {
 					LOGGER.debug("===accessToken校验不通过，权限校验失败");
-					DataUtil.deleteRedisTokenInfo(redisManager, refreshToken, accessToken);
+					DataUtils.deleteRedisTokenInfo(redisManager, refreshToken, accessToken);
 					result = ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 				}
 			}

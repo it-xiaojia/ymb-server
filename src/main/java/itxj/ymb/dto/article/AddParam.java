@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 文章书写参数
  */
 @Data
-public class WriteParam implements Serializable {
+public class AddParam implements Serializable {
     /**
      * 标题
      */
