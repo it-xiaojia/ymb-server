@@ -1,9 +1,10 @@
 package itxj.ymb.service;
 
 import itxj.ymb.dto.DeleteParam;
-import itxj.ymb.dto.ObjectQueryParam;
-import itxj.ymb.dto.label.AddParam;
-import itxj.ymb.dto.label.UpdateParam;
+import itxj.ymb.dto.ObjectOperateParam;
+import itxj.ymb.dto.label.LabelAddParam;
+import itxj.ymb.dto.label.LabelPageQueryParam;
+import itxj.ymb.dto.label.LabelUpdateParam;
 import itxj.ymb.mapper.LabelMapper;
 import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.label.LabelVO;
@@ -22,19 +23,19 @@ public class LabelService {
 	@Resource
 	private LabelMapper labelMapper;
 
-	public LabelVO queryObject(ObjectQueryParam queryParam) {
+	public LabelVO queryObject(ObjectOperateParam queryParam) {
 		return null;
 	}
 
-	public List<PageResult> queryList(itxj.ymb.dto.label.ListQueryParam queryParam) {
+	public List<PageResult> queryList(LabelPageQueryParam queryParam) {
 		return null;
 	}
 
-	public void add(AddParam addParam) {
+	public void add(LabelAddParam addParam) {
 
 	}
 
-	public void update(UpdateParam updateParam) {
+	public void update(LabelUpdateParam updateParam) {
 
 	}
 

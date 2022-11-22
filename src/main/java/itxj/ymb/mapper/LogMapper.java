@@ -1,6 +1,6 @@
 package itxj.ymb.mapper;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import itxj.ymb.pojo.Log;
 
 /**

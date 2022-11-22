@@ -2,10 +2,10 @@ package itxj.ymb.controller;
 
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.dto.DeleteParam;
-import itxj.ymb.dto.ObjectQueryParam;
-import itxj.ymb.dto.label.AddParam;
-import itxj.ymb.dto.label.ListQueryParam;
-import itxj.ymb.dto.label.UpdateParam;
+import itxj.ymb.dto.ObjectOperateParam;
+import itxj.ymb.dto.label.LabelAddParam;
+import itxj.ymb.dto.label.LabelPageQueryParam;
+import itxj.ymb.dto.label.LabelUpdateParam;
 import itxj.ymb.service.LabelService;
 import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
@@ -31,28 +31,28 @@ public class LabelController {
 
 	@PostMapping("queryObject")
 	@ApiLog
-	public ResponseEntity<LabelVO> queryObject(@RequestBody @Validated ObjectQueryParam queryParam) {
+	public ResponseEntity<LabelVO> queryObject(@RequestBody @Validated ObjectOperateParam queryParam) {
 		LabelVO labelInfoResult = labelService.queryObject(queryParam);
 		return new Result<LabelVO>().generateSuccessResponseEntity(labelInfoResult);
 	}
 
 	@PostMapping("queryList")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated ListQueryParam queryParam) {
+	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated LabelPageQueryParam queryParam) {
 		List<PageResult> labelInfoResultList = labelService.queryList(queryParam);
 		return new Result<List<PageResult>>().generateSuccessResponseEntity(labelInfoResultList);
 	}
 
 	@PostMapping("add")
 	@ApiLog
-	public ResponseEntity<?> add(@RequestBody @Validated AddParam addParam) {
+	public ResponseEntity<?> add(@RequestBody @Validated LabelAddParam addParam) {
 		labelService.add(addParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}
 
 	@PostMapping("update")
 	@ApiLog
-	public ResponseEntity<?> update(@RequestBody @Validated UpdateParam updateParam) {
+	public ResponseEntity<?> update(@RequestBody @Validated LabelUpdateParam updateParam) {
 		labelService.update(updateParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}

@@ -1,9 +1,11 @@
 package itxj.ymb.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import itxj.ymb.constant.AccountStatusConstant;
 import itxj.ymb.constant.CommonConstant;
 import itxj.ymb.dto.DeleteParam;
-import itxj.ymb.dto.ObjectQueryParam;
+import itxj.ymb.dto.ObjectOperateParam;
+import itxj.ymb.dto.auth.AuthPageQueryParam;
 import itxj.ymb.dto.user.*;
 import itxj.ymb.exception.AppRuntimeException;
 import itxj.ymb.mapper.UserMapper;
@@ -12,6 +14,7 @@ import itxj.ymb.util.DataUtils;
 import itxj.ymb.util.RedisManager;
 import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.TokenVO;
+import itxj.ymb.vo.auth.AuthVO;
 import itxj.ymb.vo.user.LoginCredential;
 import itxj.ymb.vo.user.UserVO;
 import org.apache.logging.log4j.LogManager;
@@ -36,35 +39,33 @@ public class UserService {
 	private UserMapper userMapper;
 
 	@Resource
+	private RoleService roleService;
+	@Resource
+	private AuthService authService;
+
+	@Resource
 	private RedisManager redisManager;
 
-	public UserVO queryObject(ObjectQueryParam queryParam, TokenVO tokenVO) {
-		String accessToken = tokenVO.getAccessToken();
-		// 当传入的用户ID为空或者小于等于0的时候，查询当前登录用户，否则根据ID查询指定的用户
+	public UserVO queryObject(ObjectOperateParam queryParam) {
 		Integer id = queryParam.getId();
-		User user;
-		if (ObjectUtils.isEmpty(id) || id <= 0) {
-			user = DataUtils.queryUserInfoByToken(userMapper, redisManager, accessToken);
-		} else {
-			user = userMapper.selectById(id);
-		}
+		User user = userMapper.selectById(id);
 		if (ObjectUtils.isEmpty(user)) {
 			throw new AppRuntimeException("无此用户信息");
 		}
-		UserVO userInfoResult = new UserVO();
+		UserVO userInfoResult = new UserVO(user);
 		userInfoResult.setUser(user);
 		return userInfoResult;
 	}
 
-	public List<PageResult> queryList(ListQueryParam queryParam) {
+	public List<PageResult> queryList(UserPageQueryParam queryParam) {
 		return null;
 	}
 
-	public void add(AddParam addParam) {
+	public void add(UserAddParam addParam) {
 
 	}
 
-	public void update(UpdateParam updateParam) {
+	public void update(UserUpdateParam updateParam) {
 
 	}
 
@@ -81,10 +82,10 @@ public class UserService {
 	public LoginCredential login(LoginParam loginParam) {
 		String account = loginParam.getAccount();
 		String password = loginParam.getPassword();
-		User user = userMapper.selectOne(User.builder()
-				.account(account)
-				.password(password)
-				.build());
+		QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+		userQueryWrapper.eq("val_account", account);
+		userQueryWrapper.eq("val_password", password);
+		User user = userMapper.selectOne(userQueryWrapper);
 		if (user == null) {
 			throw new AppRuntimeException("登录失败，账号或密码错误");
 		}
@@ -111,6 +112,30 @@ public class UserService {
 		TokenVO tokenVO = DataUtils.generateTokenVO(redisManager, user.getAccount(), user.getPassword(), DataUtils.generateUserInfo(user));
 		// 返回用户的登录凭证
 		return new LoginCredential(value, tokenVO.getRefreshToken(), tokenVO.getAccessToken());
+	}
+
+	/**
+	 * 根据token查询主页用户信息
+	 *
+	 * @param tokenVO 传入的token对象
+	 * @return 返回用户基本信息，用户角色名称，角色的一级权限和二级权限
+	 */
+	public UserVO queryIndexUserInfo(TokenVO tokenVO) {
+		String accessToken = tokenVO.getAccessToken();
+		User user = DataUtils.queryUserInfoByToken(userMapper, redisManager, accessToken);
+		if (ObjectUtils.isEmpty(user)) {
+			throw new AppRuntimeException("无此用户信息");
+		}
+		String roleName = roleService.queryObject(ObjectOperateParam.builder().id(user.getUserRoleId()).build()).getRole().getName();
+		List<AuthVO> level1AuthList = authService.queryList(AuthPageQueryParam.builder().roleId(user.getUserRoleId()).build()).getRows();
+		Integer parentAuthId = level1AuthList.get(0).getId();
+		List<AuthVO> level2AuthList = authService.queryList(AuthPageQueryParam.builder().roleId(user.getUserRoleId()).parentAuthId(parentAuthId).build()).getRows();
+		UserVO userInfoResult = new UserVO(user);
+		userInfoResult.setUser(user);
+		userInfoResult.setRoleName(roleName);
+		userInfoResult.setLevel1AuthList(level1AuthList);
+		userInfoResult.setLevel2AuthList(level2AuthList);
+		return userInfoResult;
 	}
 
 	/**

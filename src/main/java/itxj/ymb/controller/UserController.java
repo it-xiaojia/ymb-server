@@ -3,7 +3,7 @@ package itxj.ymb.controller;
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.annotation.NoAuth;
 import itxj.ymb.dto.DeleteParam;
-import itxj.ymb.dto.ObjectQueryParam;
+import itxj.ymb.dto.ObjectOperateParam;
 import itxj.ymb.dto.user.*;
 import itxj.ymb.service.UserService;
 import itxj.ymb.vo.PageResult;
@@ -36,29 +36,28 @@ public class UserController {
 
 	@PostMapping("queryObject")
 	@ApiLog
-	public ResponseEntity<UserVO> queryObject(@RequestBody @Validated ObjectQueryParam queryParam) {
-		TokenVO tokenVO = new TokenVO(request);
-		UserVO userInfoResult = userService.queryObject(queryParam, tokenVO);
+	public ResponseEntity<UserVO> queryObject(@RequestBody @Validated ObjectOperateParam queryParam) {
+		UserVO userInfoResult = userService.queryObject(queryParam);
 		return new Result<UserVO>().generateSuccessResponseEntity(userInfoResult);
 	}
 
 	@PostMapping("queryList")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated ListQueryParam queryParam) {
+	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated UserPageQueryParam queryParam) {
 		List<PageResult> userInfoResultList = userService.queryList(queryParam);
 		return new Result<List<PageResult>>().generateSuccessResponseEntity(userInfoResultList);
 	}
 
 	@PostMapping("add")
 	@ApiLog
-	public ResponseEntity<?> add(@RequestBody @Validated AddParam addParam) {
+	public ResponseEntity<?> add(@RequestBody @Validated UserAddParam addParam) {
 		userService.add(addParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}
 
 	@PostMapping("update")
 	@ApiLog
-	public ResponseEntity<?> update(@RequestBody @Validated UpdateParam updateParam) {
+	public ResponseEntity<?> update(@RequestBody @Validated UserUpdateParam updateParam) {
 		userService.update(updateParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}
@@ -76,6 +75,14 @@ public class UserController {
 	public ResponseEntity<LoginCredential> login(@RequestBody @Validated LoginParam loginParam) {
 		LoginCredential loginCredential = userService.login(loginParam);
 		return new Result<LoginCredential>().generateSuccessResponseEntity(loginCredential);
+	}
+
+	@PostMapping("queryIndexUserInfo")
+	@ApiLog
+	public ResponseEntity<UserVO> queryIndexUserInfo() {
+		TokenVO tokenVO = new TokenVO(request);
+		UserVO userInfoResult = userService.queryIndexUserInfo(tokenVO);
+		return new Result<UserVO>().generateSuccessResponseEntity(userInfoResult);
 	}
 
 	@PostMapping("updatePassword")

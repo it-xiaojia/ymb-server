@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 分页查询条件
+ * 分页查询参数
  */
 @Getter
 @Setter

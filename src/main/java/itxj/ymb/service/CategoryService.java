@@ -1,9 +1,10 @@
 package itxj.ymb.service;
 
 import itxj.ymb.dto.DeleteParam;
-import itxj.ymb.dto.ObjectQueryParam;
-import itxj.ymb.dto.category.AddParam;
-import itxj.ymb.dto.category.UpdateParam;
+import itxj.ymb.dto.ObjectOperateParam;
+import itxj.ymb.dto.category.CategoryAddParam;
+import itxj.ymb.dto.category.CategoryPageQueryParam;
+import itxj.ymb.dto.category.CategoryUpdateParam;
 import itxj.ymb.mapper.CategoryMapper;
 import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.category.CategoryVO;
@@ -22,19 +23,19 @@ public class CategoryService {
 	@Resource
 	private CategoryMapper categoryMapper;
 
-	public CategoryVO queryObject(ObjectQueryParam queryParam) {
+	public CategoryVO queryObject(ObjectOperateParam queryParam) {
 		return null;
 	}
 
-	public List<PageResult> queryList(itxj.ymb.dto.category.ListQueryParam queryParam) {
+	public List<PageResult> queryList(CategoryPageQueryParam queryParam) {
 		return null;
 	}
 
-	public void add(AddParam addParam) {
+	public void add(CategoryAddParam addParam) {
 
 	}
 
-	public void update(UpdateParam updateParam) {
+	public void update(CategoryUpdateParam updateParam) {
 
 	}
 

@@ -2,10 +2,10 @@ package itxj.ymb.controller;
 
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.dto.DeleteParam;
-import itxj.ymb.dto.ObjectQueryParam;
-import itxj.ymb.dto.log.AddParam;
-import itxj.ymb.dto.log.ListQueryParam;
-import itxj.ymb.dto.log.UpdateParam;
+import itxj.ymb.dto.ObjectOperateParam;
+import itxj.ymb.dto.log.LogAddParam;
+import itxj.ymb.dto.log.LogPageQueryParam;
+import itxj.ymb.dto.log.LogUpdateParam;
 import itxj.ymb.service.LogService;
 import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
@@ -31,28 +31,28 @@ public class LogController {
 
 	@PostMapping("queryObject")
 	@ApiLog
-	public ResponseEntity<LogVO> queryObject(@RequestBody @Validated ObjectQueryParam queryParam) {
+	public ResponseEntity<LogVO> queryObject(@RequestBody @Validated ObjectOperateParam queryParam) {
 		LogVO logInfoResult = logService.queryObject(queryParam);
 		return new Result<LogVO>().generateSuccessResponseEntity(logInfoResult);
 	}
 
 	@PostMapping("queryList")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated ListQueryParam queryParam) {
+	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated LogPageQueryParam queryParam) {
 		List<PageResult> logInfoResultList = logService.queryList(queryParam);
 		return new Result<List<PageResult>>().generateSuccessResponseEntity(logInfoResultList);
 	}
 
 	@PostMapping("add")
 	@ApiLog
-	public ResponseEntity<?> add(@RequestBody @Validated AddParam addParam) {
+	public ResponseEntity<?> add(@RequestBody @Validated LogAddParam addParam) {
 		logService.add(addParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}
 
 	@PostMapping("update")
 	@ApiLog
-	public ResponseEntity<?> update(@RequestBody @Validated UpdateParam updateParam) {
+	public ResponseEntity<?> update(@RequestBody @Validated LogUpdateParam updateParam) {
 		logService.update(updateParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}

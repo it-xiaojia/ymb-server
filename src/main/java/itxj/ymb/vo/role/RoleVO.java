@@ -13,6 +13,10 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class RoleVO extends Role implements Serializable {
+public class RoleVO implements Serializable {
+	private Role role;
 
+	public RoleVO(Role role) {
+		this.role = role;
+	}
 }

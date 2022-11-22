@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class PageResult implements Serializable {
+public class PageResult<T> implements Serializable {
     /**
      * 总记录数
      */
@@ -23,5 +23,5 @@ public class PageResult implements Serializable {
     /**
      * 当前页结果
      */
-    private List<?> rows;
+    private List<T> rows;
 }
