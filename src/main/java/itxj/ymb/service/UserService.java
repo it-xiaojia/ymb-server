@@ -1,18 +1,18 @@
 package itxj.ymb.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.constant.AccountStatusConstant;
 import itxj.ymb.constant.CommonConstant;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
-import itxj.ymb.dto.auth.AuthPageQueryParam;
+import itxj.ymb.dto.auth.AuthListQueryParam;
 import itxj.ymb.dto.user.*;
 import itxj.ymb.exception.AppRuntimeException;
 import itxj.ymb.mapper.UserMapper;
 import itxj.ymb.pojo.User;
 import itxj.ymb.util.DataUtils;
 import itxj.ymb.util.RedisManager;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.TokenVO;
 import itxj.ymb.vo.auth.AuthVO;
 import itxj.ymb.vo.user.LoginCredential;
@@ -57,7 +57,7 @@ public class UserService {
 		return userInfoResult;
 	}
 
-	public List<PageResult> queryList(UserPageQueryParam queryParam) {
+	public Page<UserVO> queryPage(UserPageQueryParam queryParam) {
 		return null;
 	}
 
@@ -126,10 +126,12 @@ public class UserService {
 		if (ObjectUtils.isEmpty(user)) {
 			throw new AppRuntimeException("无此用户信息");
 		}
-		String roleName = roleService.queryObject(ObjectOperateParam.builder().id(user.getUserRoleId()).build()).getRole().getName();
-		List<AuthVO> level1AuthList = authService.queryList(AuthPageQueryParam.builder().roleId(user.getUserRoleId()).build()).getRows();
-		Integer parentAuthId = level1AuthList.get(0).getId();
-		List<AuthVO> level2AuthList = authService.queryList(AuthPageQueryParam.builder().roleId(user.getUserRoleId()).parentAuthId(parentAuthId).build()).getRows();
+		ObjectOperateParam objectOperateParam = new ObjectOperateParam();
+		objectOperateParam.setId(user.getUserRoleId());
+		String roleName = roleService.queryObject(objectOperateParam).getRole().getName();
+		List<AuthVO> level1AuthList = authService.queryList(AuthListQueryParam.builder().roleId(user.getUserRoleId()).build());
+		Integer parentAuthId = level1AuthList.get(1).getAuth().getId();
+		List<AuthVO> level2AuthList = authService.queryList(AuthListQueryParam.builder().roleId(user.getUserRoleId()).parentAuthId(parentAuthId).build());
 		UserVO userInfoResult = new UserVO(user);
 		userInfoResult.setUser(user);
 		userInfoResult.setRoleName(roleName);

@@ -7,7 +7,14 @@ ymb:
       - http://localhost:18888
       - http://localhost:28888
     permit-urls:
+      - article
+      - auth
+      - category
+      - label
+      - log
       - role
+      - system
+      - user
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

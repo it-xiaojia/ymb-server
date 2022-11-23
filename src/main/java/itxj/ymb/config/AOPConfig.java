@@ -111,7 +111,7 @@ public class AOPConfig {
 	public ResponseEntity<?> handleAuth(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		Map<String, Object> map;
 		LOGGER.debug("===进行接口权限校验");
-		ResponseEntity<?> result = null;
+		ResponseEntity<?> result;
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		// 拿请求地址
 		String requestURL = request.getRequestURL().toString();
@@ -120,17 +120,9 @@ public class AOPConfig {
 		requestURL = split[4];
 		// 从配置文件中读取允许不认证就可以访问的权限列表
 		String[] permitUrls = ymbApplicationConfig.getPermitUrls();
-		if (permitUrls != null && permitUrls.length > 0) {
-			for (String permitUrl : permitUrls) {
-				if (requestURL.equals(permitUrl)) {
-					// 放行
-					result = passAuth(proceedingJoinPoint);
-				} else {
-					// 进行权限校验
-					map = checkAuth(proceedingJoinPoint, request);
-					result = (ResponseEntity<?>) map.get("result");
-				}
-			}
+		if (permitUrls != null && permitUrls.length > 0 && Arrays.asList(permitUrls).contains(requestURL)) {
+			// 放行
+			result = passAuth(proceedingJoinPoint);
 		} else {
 			// 进行权限校验
 			map = checkAuth(proceedingJoinPoint, request);

@@ -4,10 +4,9 @@ import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
 import itxj.ymb.dto.role.RoleAddParam;
-import itxj.ymb.dto.role.RolePageQueryParam;
+import itxj.ymb.dto.role.RoleListQueryParam;
 import itxj.ymb.dto.role.RoleUpdateParam;
 import itxj.ymb.service.RoleService;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.role.RoleVO;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 角色控制器
@@ -37,9 +37,9 @@ public class RoleController {
 
 	@PostMapping("queryList")
 	@ApiLog
-	public ResponseEntity<PageResult<RoleVO>> queryList(@RequestBody @Validated RolePageQueryParam queryParam) {
-		PageResult<RoleVO> roleInfoResultList = roleService.queryList(queryParam);
-		return new Result<PageResult<RoleVO>>().generateSuccessResponseEntity(roleInfoResultList);
+	public ResponseEntity<List<RoleVO>> queryList(@RequestBody @Validated RoleListQueryParam queryParam) {
+		List<RoleVO> roleVOList = roleService.queryList(queryParam);
+		return new Result<List<RoleVO>>().generateSuccessResponseEntity(roleVOList);
 	}
 
 	@PostMapping("add")

@@ -1,5 +1,6 @@
 package itxj.ymb.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
@@ -7,7 +8,6 @@ import itxj.ymb.dto.label.LabelAddParam;
 import itxj.ymb.dto.label.LabelPageQueryParam;
 import itxj.ymb.dto.label.LabelUpdateParam;
 import itxj.ymb.service.LabelService;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.label.LabelVO;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 权限控制器
@@ -36,11 +35,11 @@ public class LabelController {
 		return new Result<LabelVO>().generateSuccessResponseEntity(labelInfoResult);
 	}
 
-	@PostMapping("queryList")
+	@PostMapping("queryPage")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated LabelPageQueryParam queryParam) {
-		List<PageResult> labelInfoResultList = labelService.queryList(queryParam);
-		return new Result<List<PageResult>>().generateSuccessResponseEntity(labelInfoResultList);
+	public ResponseEntity<Page<LabelVO>> queryList(@RequestBody @Validated LabelPageQueryParam queryParam) {
+		Page<LabelVO> labelVOPage = labelService.queryPage(queryParam);
+		return new Result<Page<LabelVO>>().generateSuccessResponseEntity(labelVOPage);
 	}
 
 	@PostMapping("add")

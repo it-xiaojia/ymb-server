@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 07/10/2022 14:44:35
+ Date: 23/11/2022 21:38:11
 */
 
 SET NAMES utf8mb4;
@@ -73,8 +73,7 @@ CREATE TABLE `ymb_auth`  (
   `val_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '权限名称',
   `val_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '权限URL',
   `parent_auth_id` int(11) NULL DEFAULT NULL COMMENT '父权限ID',
-  `val_icon_class` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT 'el-icon-document' COMMENT '图标类',
-  `val_has_child` int(255) NULL DEFAULT 0 COMMENT '是否有子权限：0无，1有',
+  `val_icon_class` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT 'dashboard' COMMENT '图标类',
   PRIMARY KEY (`auth_id`) USING BTREE,
   INDEX `fk_parent_auth_id`(`parent_auth_id`) USING BTREE,
   CONSTRAINT `fk_parent_auth_id` FOREIGN KEY (`parent_auth_id`) REFERENCES `ymb_auth` (`auth_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
@@ -83,17 +82,23 @@ CREATE TABLE `ymb_auth`  (
 -- ----------------------------
 -- Records of ymb_auth
 -- ----------------------------
-INSERT INTO `ymb_auth` VALUES (1, '仪表盘', 'index', NULL, 'dashboard', 0);
-INSERT INTO `ymb_auth` VALUES (2, '开发管理', NULL, NULL, 'code', 1);
-INSERT INTO `ymb_auth` VALUES (4, '日志管理', 'log', 2, 'profile', 0);
-INSERT INTO `ymb_auth` VALUES (5, '系统管理', NULL, NULL, 'setting', 1);
-INSERT INTO `ymb_auth` VALUES (6, '角色管理', 'role', 5, 'team', 0);
-INSERT INTO `ymb_auth` VALUES (7, '权限管理', 'auth', 5, 'safety', 0);
-INSERT INTO `ymb_auth` VALUES (8, '用户管理', 'user', 5, 'user', 0);
-INSERT INTO `ymb_auth` VALUES (9, '博客管理', NULL, NULL, 'read', 1);
-INSERT INTO `ymb_auth` VALUES (10, '标签管理', 'label', 9, 'tags', 0);
-INSERT INTO `ymb_auth` VALUES (11, '分类管理', 'category', 9, 'apartment', 0);
-INSERT INTO `ymb_auth` VALUES (12, '文章管理', 'article', 9, 'file-markdown', 0);
+INSERT INTO `ymb_auth` VALUES (1, '仪表盘', '/index', NULL, 'dashboard');
+INSERT INTO `ymb_auth` VALUES (2, '开发管理', NULL, NULL, 'code');
+INSERT INTO `ymb_auth` VALUES (4, '日志管理', '/log', 2, 'profile');
+INSERT INTO `ymb_auth` VALUES (5, '系统管理', NULL, NULL, 'setting');
+INSERT INTO `ymb_auth` VALUES (6, '角色管理', '/role', 5, 'team');
+INSERT INTO `ymb_auth` VALUES (7, '权限管理', '/auth', 5, 'safety');
+INSERT INTO `ymb_auth` VALUES (8, '用户管理', '/user', 5, 'user');
+INSERT INTO `ymb_auth` VALUES (9, '博客管理', NULL, NULL, 'read');
+INSERT INTO `ymb_auth` VALUES (10, '标签管理', '/label', 9, 'tags');
+INSERT INTO `ymb_auth` VALUES (11, '分类管理', '/category', 9, 'apartment');
+INSERT INTO `ymb_auth` VALUES (12, '文章管理', '/article', 9, 'file-markdown');
+INSERT INTO `ymb_auth` VALUES (13, '多级菜单', '/menu', NULL, 'dashboard');
+INSERT INTO `ymb_auth` VALUES (14, '子菜单1', '/menu1', 13, 'dashboard');
+INSERT INTO `ymb_auth` VALUES (15, '子菜单2', '/menu2', 13, 'dashboard');
+INSERT INTO `ymb_auth` VALUES (16, '子菜单21', '/menu21', 15, 'dashboard');
+INSERT INTO `ymb_auth` VALUES (17, '子菜单22', '/menu22', 15, 'dashboard');
+INSERT INTO `ymb_auth` VALUES (18, '子菜单3', '/menu3', 13, 'dashboard');
 
 -- ----------------------------
 -- Table structure for ymb_category
@@ -182,7 +187,7 @@ DROP TABLE IF EXISTS `ymb_log`;
 CREATE TABLE `ymb_log`  (
   `log_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '日志ID',
   `val_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '日志名称',
-  `val_sesion` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '日志内容',
+  `val_section` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '日志内容',
   `val_markup_date` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '记录时间',
   `log_level_code` int(11) NULL DEFAULT 1 COMMENT '日志级别代码',
   PRIMARY KEY (`log_id`) USING BTREE,
@@ -236,6 +241,12 @@ INSERT INTO `ymb_role_auth` VALUES (1, 9);
 INSERT INTO `ymb_role_auth` VALUES (1, 10);
 INSERT INTO `ymb_role_auth` VALUES (1, 11);
 INSERT INTO `ymb_role_auth` VALUES (1, 12);
+INSERT INTO `ymb_role_auth` VALUES (1, 13);
+INSERT INTO `ymb_role_auth` VALUES (1, 14);
+INSERT INTO `ymb_role_auth` VALUES (1, 15);
+INSERT INTO `ymb_role_auth` VALUES (1, 16);
+INSERT INTO `ymb_role_auth` VALUES (1, 17);
+INSERT INTO `ymb_role_auth` VALUES (1, 18);
 
 -- ----------------------------
 -- Table structure for ymb_user
@@ -258,6 +269,6 @@ CREATE TABLE `ymb_user`  (
 -- ----------------------------
 -- Records of ymb_user
 -- ----------------------------
-INSERT INTO `ymb_user` VALUES (2, '5515463185720365ca1d15bccaf95ece', '382ffb56ccea7e2b246d7a0af36264cb', '晓梦', 1, 1, '2022-10-07 14:34:17');
+INSERT INTO `ymb_user` VALUES (2, '5515463185720365ca1d15bccaf95ece', '382ffb56ccea7e2b246d7a0af36264cb', '晓梦', 1, 1, '2022-11-23 21:35:58');
 
 SET FOREIGN_KEY_CHECKS = 1;

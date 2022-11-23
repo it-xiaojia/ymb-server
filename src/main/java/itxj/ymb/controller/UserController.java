@@ -1,12 +1,12 @@
 package itxj.ymb.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.annotation.NoAuth;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
 import itxj.ymb.dto.user.*;
 import itxj.ymb.service.UserService;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.TokenVO;
 import itxj.ymb.vo.user.LoginCredential;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 用户控制器
@@ -41,11 +40,11 @@ public class UserController {
 		return new Result<UserVO>().generateSuccessResponseEntity(userInfoResult);
 	}
 
-	@PostMapping("queryList")
+	@PostMapping("queryPage")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated UserPageQueryParam queryParam) {
-		List<PageResult> userInfoResultList = userService.queryList(queryParam);
-		return new Result<List<PageResult>>().generateSuccessResponseEntity(userInfoResultList);
+	public ResponseEntity<Page<UserVO>> queryPage(@RequestBody @Validated UserPageQueryParam queryParam) {
+		Page<UserVO> userVOPage = userService.queryPage(queryParam);
+		return new Result<Page<UserVO>>().generateSuccessResponseEntity(userVOPage);
 	}
 
 	@PostMapping("add")

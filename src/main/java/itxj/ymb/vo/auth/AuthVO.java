@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class AuthVO extends Auth implements Serializable {
+public class AuthVO implements Serializable {
 	private Auth auth;
 
 	public AuthVO(Auth auth) {

@@ -2,10 +2,9 @@ package itxj.ymb.dto.article;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.pojo.Article;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
@@ -13,10 +12,9 @@ import java.io.Serializable;
 /**
  * 文章分页查询参数
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ArticlePageQueryParam extends Page<Article> implements Serializable {
     /**
      * 标题

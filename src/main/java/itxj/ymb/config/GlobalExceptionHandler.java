@@ -39,8 +39,10 @@ public class GlobalExceptionHandler {
 				result = new Result<>().generateFailResponseEntity(bindingResult.getAllErrors().get(0).getDefaultMessage());
 			}
 		} else if (exception instanceof HttpMessageNotReadableException) {
+			exception.printStackTrace();
 			result = new Result<>().generateFailResponseEntity("参数类型非法");
 		} else if (exception instanceof HttpMediaTypeNotSupportedException) {
+			exception.printStackTrace();
 			result = new Result<>().generateFailResponseEntity("不支持的请求体类型");
 		} else if (exception instanceof AppRuntimeException) {
 			result = new Result<>().generateFailResponseEntity(exception.getMessage());

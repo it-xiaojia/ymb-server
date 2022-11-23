@@ -1,18 +1,17 @@
 package itxj.ymb.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
 import itxj.ymb.dto.label.LabelAddParam;
 import itxj.ymb.dto.label.LabelPageQueryParam;
 import itxj.ymb.dto.label.LabelUpdateParam;
 import itxj.ymb.mapper.LabelMapper;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.label.LabelVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 文章标签业务
@@ -27,7 +26,7 @@ public class LabelService {
 		return null;
 	}
 
-	public List<PageResult> queryList(LabelPageQueryParam queryParam) {
+	public Page<LabelVO> queryPage(LabelPageQueryParam queryParam) {
 		return null;
 	}
 

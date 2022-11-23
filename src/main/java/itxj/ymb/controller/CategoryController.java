@@ -1,5 +1,6 @@
 package itxj.ymb.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
@@ -7,7 +8,6 @@ import itxj.ymb.dto.category.CategoryAddParam;
 import itxj.ymb.dto.category.CategoryPageQueryParam;
 import itxj.ymb.dto.category.CategoryUpdateParam;
 import itxj.ymb.service.CategoryService;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.category.CategoryVO;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 权限控制器
@@ -36,11 +35,11 @@ public class CategoryController {
 		return new Result<CategoryVO>().generateSuccessResponseEntity(categoryInfoResult);
 	}
 
-	@PostMapping("queryList")
+	@PostMapping("queryPage")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated CategoryPageQueryParam queryParam) {
-		List<PageResult> categoryInfoResultList = categoryService.queryList(queryParam);
-		return new Result<List<PageResult>>().generateSuccessResponseEntity(categoryInfoResultList);
+	public ResponseEntity<Page<CategoryVO>> queryList(@RequestBody @Validated CategoryPageQueryParam queryParam) {
+		Page<CategoryVO> categoryVOPage = categoryService.queryPage(queryParam);
+		return new Result<Page<CategoryVO>>().generateSuccessResponseEntity(categoryVOPage);
 	}
 
 	@PostMapping("add")

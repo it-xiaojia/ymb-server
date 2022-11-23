@@ -1,6 +1,5 @@
 package itxj.ymb.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,10 +15,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-@Builder
 public class ObjectOperateParam implements Serializable {
 	@NotNull(message = "ID不能为空")
-	@Min(value = 1, message = "ID不能小于0")
+	@Min(value = 1, message = "ID不能小于等于0")
 	@Max(value = 999999, message = "ID最大值不能超过999999")
 	private Integer id;
 }

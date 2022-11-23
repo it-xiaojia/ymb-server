@@ -1,18 +1,16 @@
 package itxj.ymb.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
 import itxj.ymb.dto.log.LogAddParam;
 import itxj.ymb.dto.log.LogPageQueryParam;
-import itxj.ymb.dto.log.LogUpdateParam;
 import itxj.ymb.mapper.LogMapper;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.log.LogVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 日志业务
@@ -27,7 +25,7 @@ public class LogService {
 		return null;
 	}
 
-	public List<PageResult> queryList(LogPageQueryParam queryParam) {
+	public Page<LogVO> queryPage(LogPageQueryParam queryParam) {
 		return null;
 	}
 
@@ -35,11 +33,7 @@ public class LogService {
 
 	}
 
-	public void update(LogUpdateParam updateParam) {
-
-	}
-
-	public void delete(DeleteParam deleteParam) {
+	public void clear(DeleteParam deleteParam) {
 
 	}
 }

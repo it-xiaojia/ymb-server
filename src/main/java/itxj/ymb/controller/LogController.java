@@ -1,13 +1,12 @@
 package itxj.ymb.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import itxj.ymb.annotation.ApiLog;
 import itxj.ymb.dto.DeleteParam;
 import itxj.ymb.dto.ObjectOperateParam;
 import itxj.ymb.dto.log.LogAddParam;
 import itxj.ymb.dto.log.LogPageQueryParam;
-import itxj.ymb.dto.log.LogUpdateParam;
 import itxj.ymb.service.LogService;
-import itxj.ymb.vo.PageResult;
 import itxj.ymb.vo.Result;
 import itxj.ymb.vo.log.LogVO;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 日志控制器
@@ -36,11 +34,11 @@ public class LogController {
 		return new Result<LogVO>().generateSuccessResponseEntity(logInfoResult);
 	}
 
-	@PostMapping("queryList")
+	@PostMapping("queryPage")
 	@ApiLog
-	public ResponseEntity<List<PageResult>> queryList(@RequestBody @Validated LogPageQueryParam queryParam) {
-		List<PageResult> logInfoResultList = logService.queryList(queryParam);
-		return new Result<List<PageResult>>().generateSuccessResponseEntity(logInfoResultList);
+	public ResponseEntity<Page<LogVO>> queryPage(@RequestBody @Validated LogPageQueryParam queryParam) {
+		Page<LogVO> logVOPage = logService.queryPage(queryParam);
+		return new Result<Page<LogVO>>().generateSuccessResponseEntity(logVOPage);
 	}
 
 	@PostMapping("add")
@@ -50,17 +48,10 @@ public class LogController {
 		return new Result<>().generateSuccessResponseEntity();
 	}
 
-	@PostMapping("update")
+	@PostMapping("clear")
 	@ApiLog
-	public ResponseEntity<?> update(@RequestBody @Validated LogUpdateParam updateParam) {
-		logService.update(updateParam);
-		return new Result<>().generateSuccessResponseEntity();
-	}
-
-	@PostMapping("delete")
-	@ApiLog
-	public ResponseEntity<?> delete(@RequestBody @Validated DeleteParam deleteParam) {
-		logService.delete(deleteParam);
+	public ResponseEntity<?> clear(@RequestBody @Validated DeleteParam deleteParam) {
+		logService.clear(deleteParam);
 		return new Result<>().generateSuccessResponseEntity();
 	}
 }
