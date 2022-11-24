@@ -126,16 +126,25 @@ public class UserService {
 		if (ObjectUtils.isEmpty(user)) {
 			throw new AppRuntimeException("无此用户信息");
 		}
-		ObjectOperateParam objectOperateParam = new ObjectOperateParam();
-		objectOperateParam.setId(user.getUserRoleId());
-		String roleName = roleService.queryObject(objectOperateParam).getRole().getName();
-		List<AuthVO> level1AuthList = authService.queryList(AuthListQueryParam.builder().roleId(user.getUserRoleId()).build());
-		Integer parentAuthId = level1AuthList.get(1).getAuth().getId();
-		List<AuthVO> level2AuthList = authService.queryList(AuthListQueryParam.builder().roleId(user.getUserRoleId()).parentAuthId(parentAuthId).build());
+		Integer userRoleId = user.getUserRoleId();
 		UserVO userInfoResult = new UserVO(user);
-		userInfoResult.setUser(user);
+		// 查询角色名称
+		ObjectOperateParam objectOperateParam = new ObjectOperateParam();
+		objectOperateParam.setId(userRoleId);
+		String roleName = roleService.queryObject(objectOperateParam).getRole().getName();
 		userInfoResult.setRoleName(roleName);
+		// 查询一级菜单权限
+		List<AuthVO> level1AuthList = authService.queryList(AuthListQueryParam.builder().roleId(userRoleId).build());
+		// 根据第一个菜单（仪表盘）的父权限ID查询仪表盘下的子权限
+		Integer parentAuthId1 = level1AuthList.get(0).getAuth().getId();
+		List<AuthVO> dashBordAuthList = authService.queryList(AuthListQueryParam.builder().roleId(userRoleId).parentAuthId(parentAuthId1).build());
+		userInfoResult.setDashBordAuthList(dashBordAuthList);
+		// 删除一级菜单里面的仪表盘权限
+		level1AuthList.remove(0);
 		userInfoResult.setLevel1AuthList(level1AuthList);
+		// 根据第二个菜单的父权限ID查询二级菜单权限（一级菜单的第一个菜单为仪表盘，不在菜单中做显示）
+		Integer parentAuthId2 = level1AuthList.get(0).getAuth().getId();
+		List<AuthVO> level2AuthList = authService.queryList(AuthListQueryParam.builder().roleId(userRoleId).parentAuthId(parentAuthId2).build());
 		userInfoResult.setLevel2AuthList(level2AuthList);
 		return userInfoResult;
 	}

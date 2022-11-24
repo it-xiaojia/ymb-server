@@ -29,6 +29,10 @@ public class UserVO implements Serializable {
 	 * 二级权限菜单列表
 	 */
 	private List<AuthVO> level2AuthList;
+	/**
+	 * 仪表盘权限列表
+	 */
+	private List<AuthVO> dashBordAuthList;
 
 	public UserVO(User user) {
 		// 对账号密码进行空值脱敏处理
